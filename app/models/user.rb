@@ -6,5 +6,8 @@ class User < ApplicationRecord
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
-
+  validates :last_name, length: { minimum: 2, message: "doit comporter au moins 2 lettres" }
+  validates :email, format: { with: URI::MailTo::EMAIL_REGEXP , message: "format incorrect"}
+  validates :email, uniqueness: true
+  validates :first_name, length: { minimum: 2, message: "doit comporter au moins 2 lettres" }
 end
