@@ -12,4 +12,6 @@ class Booking < ApplicationRecord
         in: ["pending","accepted","rejected","canceled"],
         message: 'Must select : ["pending","accepted","rejected","canceled"]'
       }
+
+  validates_uniqueness_of :mouette, scope: %i[start_date end_date renter]
 end

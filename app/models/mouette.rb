@@ -59,4 +59,9 @@ class Mouette < ApplicationRecord
 
   validates :description, length: { minimum: 10 }
   # validates :rating, presence: true, numericality: { greater_than_or_equal_to: 0,less_than_or_equal_to: 5 }
+
+  # Eviter qu'un owner créé deux fois de suite la même mouette (ou la seed)
+  validates_uniqueness_of :name, scope: %i[photo description owner category price availability]
+  # Eviter qu'un faussaire de mouettes fasse des copies de mouettes illégales
+  validates_uniqueness_of :name, scope: %i[photo description]
 end

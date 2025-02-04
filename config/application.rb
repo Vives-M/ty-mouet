@@ -17,6 +17,7 @@ module TyMouet
 
     #Set up locale to Frenche
     config.i18n.default_locale = :fr
+    config.i18n.fallbacks = [:en]
 
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 7.1
