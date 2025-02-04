@@ -16,7 +16,7 @@ if felix.valid?
   felix.save!
   puts "Félix created"
 else
-  puts "Felix not valid and so not created"
+  puts "Félix not valid and so not created"
   puts felix.errors.messages
 end
 
@@ -28,9 +28,9 @@ marion = User.new(
 )
 if marion.valid?
   marion.save!
-  puts "marion created"
+  puts "Marion created"
 else
-  puts "marion not valid and so not created"
+  puts "Marion not valid and so not created"
   puts marion.errors.messages
 end
 
@@ -42,9 +42,9 @@ leo = User.new(
 )
 if leo.valid?
   leo.save!
-  puts "leo created"
+  puts "Leo created"
 else
-  puts "leo not valid and so not created"
+  puts "Leo not valid and so not created"
   puts leo.errors.messages
 end
 
@@ -56,9 +56,9 @@ caro = User.new(
 )
 if caro.valid?
   caro.save!
-  puts "caro created"
+  puts "Caro created"
 else
-  puts "caro not valid and so not created"
+  puts "Caro not valid and so not created"
   puts caro.errors.messages
 end
 
@@ -405,42 +405,40 @@ mouettes_array.each_with_index do |mouette, index|
     file = URI.parse(cloudinary_url).open
     new_mouette.photo.attach(io: file, filename: "#{new_mouette.name}.png", content_type: "image/png")
   end
-  puts "one mouette created"
 
   if new_mouette.valid?
     new_mouette.save!
-    puts "new_mouette created"
+    puts "New mouette created #{mouette.name}"
   else
-    puts "new_mouette not valid and so not created"
+    puts "New mouette not created as already existing"
     puts new_mouette.errors.messages
   end
 
 end
 
 
-#4. Create bookings for Demo
+#4. Create bookings to owner "Marion" for demos
 
-#4.1 Bookings to owner Marion
-marion = User.where(last_name:"Vives").first
-felix = User.where(last_name:"Orain").first
+marion = User.find_by(last_name:"Vives")
+felix = User.find_by(last_name:"Orain")
+caro = User.find_by(last_name:"Cerbelaud")
+leo = User.find_by(last_name:"Tremoureux")
 
-puts "Marion #{marion}"
+renters = [felix, caro, leo]
 
 Mouette.where(category:"Groupe de zikmouëts").each do |mouette|
   mouette.update(owner:marion)
-  # random_date = rand(1..60)
-  # start_date = Date.today + random_date.days
-  # random_duration = rand(1..30)
+  random_date = rand(1..60)
+  start_date = Date.today + random_date.days
+  random_duration = rand(1..30)
 
-  # new_booking_to_marion = Booking.new(start_date: start_date, end_date: start_date + random_duration.days, mouette:mouette, renter:felix)
-
-  new_booking_to_marion = Booking.new(start_date: Date.today, end_date: Date.today + 2.days, mouette: mouette, renter: felix)
+  new_booking_to_marion = Booking.new(start_date: start_date, end_date: start_date + random_duration.days, mouette:mouette, renter:renters.sample)
 
   if new_booking_to_marion.valid?
     new_booking_to_marion.save!
-    puts "new_booking_to_marion created"
+    puts "New booking created for #{mouette.name}"
   else
-    puts "new_booking_to_marion not valid and so not created"
+    puts "Can't create booking, already exists"
     puts new_booking_to_marion.errors.messages
   end
 
@@ -448,4 +446,4 @@ Mouette.where(category:"Groupe de zikmouëts").each do |mouette|
 end
 
 # 3. Display a message 🎉
-puts "Finished! Created #{Mouette.count} mouettes and #{User.count} users and #{Booking.count} bookings"
+puts "Finished! You now have : #{Mouette.count} mouettes, #{User.count} users and #{Booking.count} bookings. Congratulations !"
