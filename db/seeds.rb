@@ -2,10 +2,7 @@ require 'faker'
 require "open-uri"
 
 # 1. Clean the database 🗑️
-puts "Cleaning database..."
-Booking.destroy_all
-Mouette.destroy_all
-User.destroy_all
+# On ne supprime plus les objets précédents, mais via les validations de modèles on empêche la création de doublons
 
 # 2. Create the users
 puts "Creating users ..."
