@@ -2,44 +2,65 @@ require 'faker'
 require "open-uri"
 
 # 1. Clean the database 🗑️
-puts "Cleaning database..."
-Booking.destroy_all
-Mouette.destroy_all
-User.destroy_all
+# On ne supprime plus les objets précédents, mais via les validations de modèles on empêche la création de doublons
 
 # 2. Create the users
 puts "Creating users ..."
-User.create!(
+felix = User.new(
     last_name: "Orain",
     first_name: "Félix",
     email: "felix.orain@gmail.com",
     password: "password"
 )
-puts "Félix created"
+if felix.valid?
+  felix.save!
+  puts "Félix created"
+else
+  puts "Felix not valid and so not created"
+  puts felix.errors.messages
+end
 
-User.create!(
+marion = User.new(
     first_name: "Marion",
     last_name: "Vives",
     email: "mvives.dev@gmail.com",
     password: "password"
 )
-puts "Marion created"
+if marion.valid?
+  marion.save!
+  puts "marion created"
+else
+  puts "marion not valid and so not created"
+  puts marion.errors.messages
+end
 
-User.create!(
+leo = User.new(
     first_name: "Léo",
     last_name: "Tremoureux",
     email: "ltremoureux@hotmail.fr",
     password: "password"
 )
-puts "Léo created"
+if leo.valid?
+  leo.save!
+  puts "leo created"
+else
+  puts "leo not valid and so not created"
+  puts leo.errors.messages
+end
 
-User.create!(
+caro = User.new(
     first_name: "Caro",
     last_name: "Cerbelaud",
     email: "caroline.cerbelaud@gmail.com",
     password: "password"
 )
-puts "Caro created"
+if caro.valid?
+  caro.save!
+  puts "caro created"
+else
+  puts "caro not valid and so not created"
+  puts caro.errors.messages
+end
 
 puts "#{User.count} created"
 
@@ -385,7 +406,14 @@ mouettes_array.each_with_index do |mouette, index|
     new_mouette.photo.attach(io: file, filename: "#{new_mouette.name}.png", content_type: "image/png")
   end
   puts "one mouette created"
-  new_mouette.save!
+
+  if new_mouette.valid?
+    new_mouette.save!
+    puts "new_mouette created"
+  else
+    puts "new_mouette not valid and so not created"
+    puts new_mouette.errors.messages
+  end
 
 end
 
@@ -397,88 +425,27 @@ marion = User.where(last_name:"Vives").first
 felix = User.where(last_name:"Orain").first
 
 puts "Marion #{marion}"
+
 Mouette.where(category:"Groupe de zikmouëts").each do |mouette|
   mouette.update(owner:marion)
-  day = rand(10..25)
-  month = rand(1..9)
-  Booking.create!(start_date:"#{day}/0#{month}/2025", end_date:"#{day}/0#{month}/2025", mouette:mouette, renter:felix)
+  # random_date = rand(1..60)
+  # start_date = Date.today + random_date.days
+  # random_duration = rand(1..30)
+
+  # new_booking_to_marion = Booking.new(start_date: start_date, end_date: start_date + random_duration.days, mouette:mouette, renter:felix)
+
+  new_booking_to_marion = Booking.new(start_date: Date.today, end_date: Date.today + 2.days, mouette: mouette, renter: felix)
+
+  if new_booking_to_marion.valid?
+    new_booking_to_marion.save!
+    puts "new_booking_to_marion created"
+  else
+    puts "new_booking_to_marion not valid and so not created"
+    puts new_booking_to_marion.errors.messages
+  end
+
   puts "update #{mouette.name} with #{mouette.owner.last_name} owner"
 end
 
-# #4.2 Bookings with Marion as renter
-# devamouette = Mouette.create!(
-#         name: "Deva-mouette",
-#         availability: "✅ Disponible",
-#         accessories: "noeud papillon",
-#         description: "Ayant parcouru le monde entier à la recherche des plantes les plus fantastiques, elle a des récits de voyage à revendre",
-#         photo: "A_very_happy_seagull_with_a_backpack_earrings_and_a_beanie_working_in_a_botanical_garden_manipulating_plants_jr3v5f",
-#         address: "Place du parlement, 35000 Rennes",
-#         category: "Conteuse d'histoires")
-
-# cloudinary_url = "https://res.cloudinary.com/#{ENV["CLOUDINARY_CLOUD_NAME"]}/image/upload/#{devamouette[:photo]}.jpg"
-# file = URI.parse(cloudinary_url).open
-# devamouette.photo.attach(io: file, filename: "#{devamouette.name}.png", content_type: "image/png")
-# bookdeva = Booking.create!(start_date:"12/05/2025", end_date:"25/06/2025", mouette:devamouette, renter:marion)
-# puts "booking created #{bookdeva}"
-
 # 3. Display a message 🎉
 puts "Finished! Created #{Mouette.count} mouettes and #{User.count} users and #{Booking.count} bookings"
-
-
-# OLD SEED MOUETTE
-
-# mouettes_descriptions = [
-#   "Une mouette blanche qui plane majestueusement dans le ciel bleu.",
-#   "La mouette au bec jaune qui se pose souvent près de l'eau.",
-#   "Une mouette curieuse observant les passants sur la plage.",
-#   "Cette mouette agile vole au-dessus des vagues avec grande aisance.",
-#   "La mouette en vol criant haut et fort, son cri résonnant dans l'air.",
-#   "Une mouette solitaire posée sur un rocher, contemplant l'horizon.",
-#   "Les mouettes virevoltantes dansent dans l'air au-dessus du rivage.",
-#   "Une mouette bruyante qui cherche sa nourriture près des bateaux.",
-#   "La mouette effrontée vole si près des gens qu'on peut presque la toucher.",
-#   "Une mouette gracieuse qui survole l'océan sans jamais se poser.",
-#   "La mouette qui plonge pour attraper un poisson, sa cible parfaitement visée.",
-#   "Des mouettes bruyantes se regroupent sur la plage pour se reposer.",
-#   "Une mouette solitaire qui observe les vagues s'écraser contre les rochers.",
-#   "Les mouettes au cri perçant qui s'envolent dès qu'un nuage passe.",
-#   "Une mouette errante qui semble se perdre dans l'immensité de l'océan.",
-#   "La mouette qui vole à toute vitesse, défiant les courants marins.",
-#   "Une mouette qui se pose tranquillement sur un mât de bateau.",
-#   "La mouette qui scrute la mer à la recherche de petits poissons.",
-#   "Une mouette sur un banc de sable, ses ailes ouvertes dans le vent.",
-#   "Une mouette qui déploie ses ailes pour prendre de l'altitude.",
-#   "Les mouettes qui se battent pour un morceau de pain jeté par un touriste.",
-#   "Une mouette majestueuse survolant le port au crépuscule.",
-#   "La mouette qui se perche sur une bouée en plein milieu de la mer.",
-#   "Les mouettes qui suivent les bateaux en quête de restes de poissons.",
-#   "Une mouette posée sur un quai, observant la mer avec calme.",
-#   "Les mouettes qui migrent en groupe vers des endroits plus chauds.",
-#   "Une mouette qui fait une pause sur le sable avant de reprendre son vol.",
-#   "La mouette qui se bat contre le vent lors d'une tempête marine.",
-#   "Les mouettes qui naviguent ensemble en suivant les vagues de l'océan.",
-#   "Une mouette audacieuse qui vient chercher à manger dans un marché de poisson."
-# ]
-
-# cloudinary_url = "https://res.cloudinary.com/dpvtwxlxh/image/upload/qqvrq6airlahpjpqkxsk.jpg"
-
-
-# 30.times do |index|
-#   mouette = Mouette.new(
-#     name: Faker::Creature::Bird.implausible_common_name,
-#     availability: "✅ Disponible",
-#     rating: rand(0..5),
-#     latitude: 48.083328,
-#     longitude: -1.68333,
-#     accessories: ["casque", "slip", "veste en cuir", "noeud papillon"].sample,
-#     description: mouettes_descriptions[index],
-#     price: rand(20..100),
-#     owner: User.all[rand(0..3)]
-#   )
-#   cloudinary_url = "https://res.cloudinary.com/#{ENV["CLOUDINARY_CLOUD_NAME"]}/image/upload/#{mouettes_photos[index]}.jpg"
-#   file = URI.parse(cloudinary_url).open
-#   mouette.photo.attach(io: file, filename: "#{mouette.name}.png", content_type: "image/png")
-#   mouette.save!
-
-#   puts "creating one mouette"
-# end
