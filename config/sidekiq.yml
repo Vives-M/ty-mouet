@@ -1,9 +1,0 @@
-:concurrency: 5
-:queues:
-  - default
-
-:scheduler:
-  :schedule:
-    bookings_daily_cleaning_job:
-      cron: "0 3 * * *"
-      class: "BookingsDailyCleaningJob"
