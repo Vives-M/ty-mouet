@@ -79,3 +79,4 @@ group :test do
 end
 
 gem "sidekiq", "~> 7.3"
+gem 'sidekiq-cron'
